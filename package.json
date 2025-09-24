@@ -1,0 +1,51 @@
+{
+  "name": "learning-solidity",
+  "version": "1.0.0",
+  "description": "Curated learning on how to create Dapps with Solidity using different Development frameworks",
+  "main": "index.js",
+  "scripts": {
+    "hardhat:compile": "cd hardhat && npm run compile",
+    "hardhat:test": "cd hardhat && npm run test",
+    "hardhat:coverage": "cd hardhat && npm run coverage",
+    "hardhat:deploy:local": "cd hardhat && npm run deploy:local",
+    "hardhat:deploy:testnet": "cd hardhat && npm run deploy:testnet",
+    "hardhat:node": "cd hardhat && npm run node",
+    "hardhat:clean": "cd hardhat && npm run clean",
+    "hardhat:lint": "cd hardhat && npm run lint",
+    "foundry:compile": "cd foundry && forge build",
+    "foundry:test": "cd foundry && forge test",
+    "foundry:test:coverage": "cd foundry && forge coverage",
+    "foundry:deploy:local": "cd foundry && forge script script/Deploy.s.sol --broadcast --rpc-url http://localhost:8545",
+    "foundry:deploy:testnet": "cd foundry && forge script script/Deploy.s.sol --broadcast --rpc-url $RPC_URL --private-key $PRIVATE_KEY",
+    "foundry:clean": "cd foundry && forge clean",
+    "foundry:fmt": "cd foundry && forge fmt",
+    "install:all": "npm install && cd hardhat && npm install",
+    "clean:all": "npm run hardhat:clean && npm run foundry:clean",
+    "test:all": "npm run hardhat:test && npm run foundry:test",
+    "compile:all": "npm run hardhat:compile && npm run foundry:compile"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/learning-solidity.git"
+  },
+  "keywords": [
+    "solidity",
+    "hardhat",
+    "foundry",
+    "ethereum",
+    "defi",
+    "smart-contracts",
+    "blockchain",
+    "dapp"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/learning-solidity/issues"
+  },
+  "homepage": "https://github.com/yourusername/learning-solidity#readme",
+  "devDependencies": {
+    "prettier": "^3.0.0",
+    "prettier-plugin-solidity": "^1.2.0"
+  }
+}

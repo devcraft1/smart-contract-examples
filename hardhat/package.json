@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devcraft1/defi-pool.git"
+    "url": "git+https://github.com/devcraft1/defi.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/devcraft1/defi-pool/issues"
+    "url": "https://github.com/devcraft1/defi/issues"
   },
-  "homepage": "https://github.com/devcraft1/defi-pool#readme",
+  "homepage": "https://github.com/devcraft1/defi#readme",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
     "@nomicfoundation/hardhat-ethers": "^3.0.0",

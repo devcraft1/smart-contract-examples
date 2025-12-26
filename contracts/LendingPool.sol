@@ -86,8 +86,10 @@ contract LiquidityPool {
         token.transferFrom(msg.sender, address(this), _amount);
 
         /// adding in lending and lenders array for record
-        lendAmount[msg.sender].amount = _amount;
-        lendAmount[msg.sender].start = block.timestamp;
+        lendAmount[msg.sender].amount += _amount;
+        if (lendAmount[msg.sender].start == 0) {
+            lendAmount[msg.sender].start = block.timestamp;
+        }
         lenders[msg.sender] = true;
 
         /// updating total supply
@@ -98,10 +100,13 @@ contract LiquidityPool {
     /// @param _amount - amount to be withdraw
     function borrow(uint256 _amount) external {
         require(_amount != 0, " amount can not be 0");
+        require(_amount <= totalSupply, "not enough liquidity");
 
         /// updating records first
-        borrowAmount[msg.sender].amount = _amount;
-        borrowAmount[msg.sender].start = block.timestamp;
+        borrowAmount[msg.sender].amount += _amount;
+        if (borrowAmount[msg.sender].start == 0) {
+            borrowAmount[msg.sender].start = block.timestamp;
+        }
         totalSupply -= _amount;
 
         /// then transfer
@@ -116,10 +121,15 @@ contract LiquidityPool {
 
         /// total amount to be repaid with intrest
         amount storage amount_ = borrowAmount[msg.sender];
-        uint256 _amount = (amount_.amount +
-            (amount_.amount *
-                ((block.timestamp - amount_.start) * borrowRate * 1e18)) /
-            totalSupply);
+        uint256 _amount;
+        if (totalSupply == 0) {
+            _amount = amount_.amount;
+        } else {
+            _amount = (amount_.amount +
+                (amount_.amount *
+                    ((block.timestamp - amount_.start) * borrowRate * 1e18)) /
+                totalSupply);
+        }
 
         require(_amount != 0, " amount can not be 0");
 
@@ -141,10 +151,15 @@ contract LiquidityPool {
 
         // calculating the total amount along with the interest
         amount storage amount_ = lendAmount[msg.sender];
-        uint256 _amount = (amount_.amount +
-            (amount_.amount *
-                ((block.timestamp - amount_.start) * lendRate * 1e18)) /
-            totalSupply);
+        uint256 _amount;
+        if (totalSupply == 0) {
+            _amount = amount_.amount;
+        } else {
+            _amount = (amount_.amount +
+                (amount_.amount *
+                    ((block.timestamp - amount_.start) * lendRate * 1e18)) /
+                totalSupply);
+        }
 
         require(_amount != 0, " amount can not be 0");
 

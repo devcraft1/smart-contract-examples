@@ -32,8 +32,8 @@ contract Test {
             if (user[i].id == id) {
                 return (user[i].name);
             }
-            return "username not found";
         }
+        return "username not found";
     }
 
     function UserInterest(uint256 id) public view returns (string memory) {
@@ -41,7 +41,7 @@ contract Test {
             if (user[i].id == id) {
                 return (user[i].interest);
             }
-            return "user interest not found";
         }
+        return "user interest not found";
     }
 }

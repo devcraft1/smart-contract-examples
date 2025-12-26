@@ -2,29 +2,6 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
-/**
- * VULNERABILITY REPORT - MultiSignature.sol (Wallet contract in file)
- * ====================================================================
- * BUG on lines 39-43: Approval logic is AFTER the send check
- *
- * Current order (WRONG):
- * 1. Check if approvals >= quorum -> send
- * 2. Then check if user already approved -> add approval
- *
- * Correct order should be:
- * 1. Check if user already approved -> add approval
- * 2. Then check if approvals >= quorum -> send
- *
- * IMPACT: First call to sendTransfer won't count the caller's approval
- * The transfer can only be sent on a SUBSEQUENT call after quorum is reached
- *
- * Example with quorum=2:
- * - Approver1 calls sendTransfer: approvals becomes 1 (after check)
- * - Approver2 calls sendTransfer: checks if 1 >= 2 (false), then approvals becomes 2
- * - Approver3 must call: checks if 2 >= 2 (true), sends transfer
- * - So it needs quorum+1 calls instead of quorum calls!
- */
-
 describe("Wallet (MultiSignature)", function () {
   async function deployFixture() {
     const [deployer, approver1, approver2, approver3, recipient] =
@@ -82,32 +59,21 @@ describe("Wallet (MultiSignature)", function () {
     });
   });
 
-  describe("sendTransfer - VULNERABILITY TEST", function () {
-    it("VULNERABILITY: Needs quorum+1 approvals due to bug", async function () {
-      const { wallet, approver1, approver2, approver3, recipient } =
+  describe("sendTransfer", function () {
+    it("Should send transfer when quorum is reached", async function () {
+      const { wallet, approver1, approver2, recipient } =
         await loadFixture(deployFixture);
 
-      // Create transfer
       await wallet
         .connect(approver1)
         .createTransfer(ethers.parseEther("1"), recipient.address);
 
-      // Approver1 approves - after this call, approvals = 1
-      // (approval is counted AFTER the quorum check)
       await wallet.connect(approver1).sendTransfer(0);
 
-      // Approver2 approves - checks if 1 >= 2 (false), then approvals = 2
-      await wallet.connect(approver2).sendTransfer(0);
-
-      // BUG: Transfer should have been sent after approver2 (quorum=2)
-      // But it wasn't because approval count happens AFTER the send check
-
-      // Approver3 must also call - checks if 2 >= 2 (true), sends!
       const balanceBefore = await ethers.provider.getBalance(recipient.address);
-      await wallet.connect(approver3).sendTransfer(0);
+      await wallet.connect(approver2).sendTransfer(0);
       const balanceAfter = await ethers.provider.getBalance(recipient.address);
 
-      // Transfer finally sent
       expect(balanceAfter - balanceBefore).to.equal(ethers.parseEther("1"));
     });
 
@@ -132,10 +98,9 @@ describe("Wallet (MultiSignature)", function () {
 
       await wallet.connect(approver1).sendTransfer(0);
       await wallet.connect(approver2).sendTransfer(0);
-      await wallet.connect(approver3).sendTransfer(0); // This sends
 
       await expect(
-        wallet.connect(approver1).sendTransfer(0)
+        wallet.connect(approver3).sendTransfer(0)
       ).to.be.revertedWith("transfer has already been sent");
     });
   });

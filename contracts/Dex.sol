@@ -187,7 +187,7 @@ contract Dex {
                     traderBalances[msg.sender][ticker] -
                     (matched);
                 traderBalances[msg.sender][DAI] =
-                    traderBalances[msg.sender][DAI] -
+                    traderBalances[msg.sender][DAI] +
                     (matched * (orders[i].price));
                 traderBalances[orders[i].trader][ticker] =
                     traderBalances[orders[i].trader][ticker] +

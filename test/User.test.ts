@@ -2,28 +2,6 @@ import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 
-/**
- * VULNERABILITY REPORT - User.sol (Test contract)
- * ================================================
- * BUG in UserName() and UserInterest() functions (lines 35, 44):
- * The "not found" return statement is INSIDE the for loop, executing on first iteration
- * if the condition doesn't match.
- *
- * Current logic:
- * for (i = 0; i < user.length; i++) {
- *     if (user[i].id == id) { return user[i].name; }
- *     return "username not found";  // BUG: Returns on first non-match!
- * }
- *
- * Should be:
- * for (i = 0; i < user.length; i++) {
- *     if (user[i].id == id) { return user[i].name; }
- * }
- * return "username not found";  // After loop completes
- *
- * IMPACT: Can only find user with id at index 0
- */
-
 describe("Test (User)", function () {
   async function deployFixture() {
     const Test = await ethers.getContractFactory("Test");
@@ -60,45 +38,49 @@ describe("Test (User)", function () {
     });
   });
 
-  describe("UserName - VULNERABILITY TEST", function () {
+  describe("UserName", function () {
     it("Should return name for first user", async function () {
       const { test } = await loadFixture(deployFixture);
       await test.createUser(1, "Alice", "Solidity");
       expect(await test.UserName(1)).to.equal("Alice");
     });
 
-    it("VULNERABILITY: Returns 'not found' for second user due to bug", async function () {
+    it("Should return name for any user", async function () {
       const { test } = await loadFixture(deployFixture);
       await test.createUser(1, "Alice", "Solidity");
       await test.createUser(2, "Bob", "Rust");
 
-      // First user works (index 0)
       expect(await test.UserName(1)).to.equal("Alice");
+      expect(await test.UserName(2)).to.equal("Bob");
+    });
 
-      // BUG: Second user returns "username not found" because
-      // the return statement is inside the loop
-      // On first iteration: id=2 != user[0].id=1, so returns "not found"
-      expect(await test.UserName(2)).to.equal("username not found");
+    it("Should return 'not found' for non-existent user", async function () {
+      const { test } = await loadFixture(deployFixture);
+      await test.createUser(1, "Alice", "Solidity");
+      expect(await test.UserName(999)).to.equal("username not found");
     });
   });
 
-  describe("UserInterest - VULNERABILITY TEST", function () {
+  describe("UserInterest", function () {
     it("Should return interest for first user", async function () {
       const { test } = await loadFixture(deployFixture);
       await test.createUser(1, "Alice", "Solidity");
       expect(await test.UserInterest(1)).to.equal("Solidity");
     });
 
-    it("VULNERABILITY: Returns 'not found' for second user due to bug", async function () {
+    it("Should return interest for any user", async function () {
       const { test } = await loadFixture(deployFixture);
       await test.createUser(1, "Alice", "Solidity");
       await test.createUser(2, "Bob", "Rust");
 
-      // First user works
       expect(await test.UserInterest(1)).to.equal("Solidity");
+      expect(await test.UserInterest(2)).to.equal("Rust");
+    });
 
-      // BUG: Same issue as UserName
-      expect(await test.UserInterest(2)).to.equal("user interest not found");
+    it("Should return 'not found' for non-existent user", async function () {
+      const { test } = await loadFixture(deployFixture);
+      await test.createUser(1, "Alice", "Solidity");
+      expect(await test.UserInterest(999)).to.equal("user interest not found");
     });
   });
 });

@@ -100,10 +100,10 @@ contract Tinder {
         SwipeSession storage swipeSession = swipeSessions[msg.sender];
         if (swipeSession.start + 86400 <= block.timestamp) {
             swipeSession.start = block.timestamp;
-            swipeSession.count = 100;
+            swipeSession.count = 0;
         }
         require(
-            swipeSession.count <= 100,
+            swipeSession.count < 100,
             "You have already used up all your swipes for today"
         );
         swipeSession.count++;

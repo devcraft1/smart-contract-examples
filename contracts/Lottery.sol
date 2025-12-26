@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 contract Lottery {
@@ -12,7 +13,7 @@ contract Lottery {
     uint256 public houseFee;
     address public admin;
 
-    constructor(uint256 fee) public {
+    constructor(uint256 fee) {
         require(fee > 1 && fee < 99, "fee should be between 1 and 99");
         admin = msg.sender;
         houseFee = fee;
@@ -52,7 +53,7 @@ contract Lottery {
     function _randomModulo(uint256 modulo) internal view returns (uint256) {
         return
             uint256(
-                keccak256(abi.encodePacked(block.timestamp, block.difficulty))
+                keccak256(abi.encodePacked(block.timestamp, block.prevrandao))
             ) % modulo;
     }
 

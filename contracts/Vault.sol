@@ -28,10 +28,12 @@ contract Vault {
 
     function deposit(uint256 _amount) external {
         uint256 shares;
+        uint256 balance = token.balanceOf(address(this));
         if (totalSupply == 0) {
             shares = _amount;
         } else {
-            shares = (_amount * totalSupply) / token.balanceOf(address(this));
+            require(balance > 0, "vault balance is zero");
+            shares = (_amount * totalSupply) / balance;
         }
 
         mint(msg.sender, shares);

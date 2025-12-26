@@ -12,7 +12,7 @@ contract BookAService {
     event Occupy(address _occupant, uint256 _value);
 
     constructor() {
-        owner == msg.sender;
+        owner = payable(msg.sender);
         currentStatus = Statuses.Vacant;
     }
 

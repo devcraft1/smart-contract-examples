@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 contract Wallet {
@@ -29,17 +30,15 @@ contract Wallet {
 
     function sendTransfer(uint256 id) external onlyApprover {
         require(transfers[id].sent == false, "transfer has already been sent");
+        if (approvals[msg.sender][id] == false) {
+            approvals[msg.sender][id] = true;
+            transfers[id].approvals++;
+        }
         if (transfers[id].approvals >= quorum) {
             transfers[id].sent = true;
             address payable to = transfers[id].to;
             uint256 amount = transfers[id].amount;
             to.transfer(amount);
-            return;
-        }
-        //BUG: put this BEFORE if(transfers[id].approvals >= quorum)
-        if (approvals[msg.sender][id] == false) {
-            approvals[msg.sender][id] = true;
-            transfers[id].approvals++;
         }
     }
 

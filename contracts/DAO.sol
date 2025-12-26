@@ -118,7 +118,7 @@ contract DAO {
             "cannot execute proposal already executed"
         );
         require(
-            (proposal.votes / totalShares) * 100 >= quorum,
+            (proposal.votes * 100) / totalShares >= quorum,
             "cannot execute proposal with votes # below quorum"
         );
         _transferEther(proposal.amount, proposal.recipient);

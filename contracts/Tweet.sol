@@ -69,6 +69,14 @@ contract Twitter {
         following[msg.sender].push(_followed);
     }
 
+    function authorize(address _operator) external {
+        operators[msg.sender][_operator] = true;
+    }
+
+    function revoke(address _operator) external {
+        operators[msg.sender][_operator] = false;
+    }
+
     function getLatestTweets(uint256 count)
         external
         view

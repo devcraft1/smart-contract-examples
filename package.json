@@ -1,7 +1,7 @@
 {
-  "name": "solidity-algo-and-dsa",
+  "name": "smart-contract-examples",
   "version": "1.0.0",
-  "description": "Solidity algorithms and data structures",
+  "description": "Collection of Solidity smart contract examples with tests",
   "main": "index.js",
   "scripts": {
     "compile": "hardhat compile",

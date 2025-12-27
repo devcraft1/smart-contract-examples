@@ -49,6 +49,10 @@ yarn-error.log*
 deployments/localhost/
 deployments/hardhat/
 
+# Hardhat Ignition
+ignition/deployments/localhost/
+ignition/deployments/hardhat/
+
 # Misc
 *.tgz
 .eslintcache

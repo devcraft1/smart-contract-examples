@@ -1,23 +1,14 @@
 {
   "name": "smart-contract-examples",
   "version": "1.0.0",
-  "description": "Collection of Solidity smart contract examples with tests",
+  "description": "Solidity smart contract examples with tests",
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
-    "test:coverage": "hardhat coverage",
     "node": "hardhat node",
     "clean": "hardhat clean",
     "deploy": "hardhat ignition deploy ignition/modules/All.ts",
-    "deploy:local": "hardhat ignition deploy ignition/modules/All.ts --network localhost",
-    "deploy:sepolia": "hardhat ignition deploy ignition/modules/All.ts --network sepolia",
-    "deploy:base": "hardhat ignition deploy ignition/modules/All.ts --network baseSepolia",
-    "deploy:arbitrum": "hardhat ignition deploy ignition/modules/All.ts --network arbitrumSepolia",
-    "deploy:lisk": "hardhat ignition deploy ignition/modules/All.ts --network liskSepolia",
-    "verify:sepolia": "hardhat ignition verify --network sepolia",
-    "verify:base": "hardhat ignition verify --network baseSepolia",
-    "verify:arbitrum": "hardhat ignition verify --network arbitrumSepolia",
-    "verify:lisk": "hardhat ignition verify --network liskSepolia"
+    "verify": "hardhat ignition verify"
   },
   "author": "",
   "license": "ISC",

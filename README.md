@@ -217,3 +217,6 @@ MIT License - see LICENSE file for details
 
 ---
 
+**Happy Learning! 🎓**
+
+*Explore both Hardhat and Foundry to become a well-rounded Solidity developer.*
